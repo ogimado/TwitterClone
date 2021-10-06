@@ -10,6 +10,8 @@
             <li class="nav-item my-icon"><img src="<?php echo htmlspecialchars($view_user['image_path']); ?>" alt="" class="js-popover"
             data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true"
             data-bs-content="<a href='profile.php'>プロフィール</a><br><a href ='sign-out.php'>ログアウト</a>"></li>
+            <!-- $view_userは、Controllers/該当.php で$userの表示用の変数として、定義されている。 -->
+            <!-- $user = getUserSession(); なので、セッションのユーザー情報を取得している。 -->
         </ul>
     </div>
 </div>

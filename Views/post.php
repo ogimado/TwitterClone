@@ -1,11 +1,3 @@
-<?php
-//設定関連ファイル（config.php）を読み込む
-include_once('../config.php');
-//便利な関数（util.php）を読み込む
-include_once('../util.php');
-?>
-
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -26,8 +18,10 @@ include_once('../util.php');
             <!-- つぶやき投稿エリア -->
             <div class="tweet-post">
                 <div class="my-icon">
-                    <img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/sample-person.jpg" alt="">
+                    <img src="<?php echo htmlspecialchars($view_user['image_path']); ?>" alt="">
                 </div>
+                <!-- $view_userは、Controllers/該当.php で$userの表示用の変数として、定義されている。 -->
+                <!-- $user = getUserSession(); なので、セッションのユーザー情報を取得している。util.php -->
                 <div class="input-area">
                     <form action="post.php" method="post" enctype="multipart/form-data">
                         <textarea name="body" placeholder="いまどうしてる？" maxlength="140"></textarea>
