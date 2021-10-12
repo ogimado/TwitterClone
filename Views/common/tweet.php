@@ -16,7 +16,7 @@
             <img src="<?php echo buildImagePath($view_tweet['tweet_image_name'],'tweet'); ?>" alt="" class="post-image">
         <?php endif; ?>
         <div class="icon-list">
-            <div class="like" data-like-id=<?php echo htmlspecialchars($view_tweet['like_id']); ?>>
+            <div class="like" data-tweet-id="<?php echo htmlspecialchars($view_tweet['tweet_id']); ?>" data-like-id=<?php echo htmlspecialchars($view_tweet['like_id']); ?>>
                 <!-- いいね！している場合（like_idがnullでないとき）青いハート表示 -->
                 <?php if(isset($view_tweet['like_id'])){
                     echo '<img src="' . HOME_URL . 'Views/img/icon-heart-twitterblue.svg" alt="">';

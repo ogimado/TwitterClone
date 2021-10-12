@@ -47,10 +47,11 @@ function createTweet(array $data)
  * ツイート一覧を取得
  * 
  * @param array $user ログインしているユーザー情報
+ * @param string $keyword 検索キーワード
  * @return array|false
  */
 
-function findTweets(array $user){
+function findTweets(array $user, string $keyword = null){
   $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
   if($mysqli -> connect_errno){
     echo 'Mysqlの接続に失敗しました。'. $mysqli -> connect_error ."\n";
@@ -61,10 +62,10 @@ function findTweets(array $user){
   $login_user_id = $mysqli -> real_escape_string($user['id']);
 
   // 検索のSQLクエリを作成
-  $query =<<<SQL
+  $query = <<<SQL
     SELECT 
       T.id AS tweet_id,
-      T.status AS tewwt_status,
+      T.status AS tweet_status,
       T.body AS tweet_body,
       T.image_name AS tweet_image_name,
       T.created_at AS tweet_created_at,
@@ -72,12 +73,11 @@ function findTweets(array $user){
       U.name AS user_name,
       U.nickname AS user_nickname,
       U.image_name AS user_image_name,
-      -- ログインユーザーがいいね！したか（いいね！いている場合、値が入る）
+      -- ログインユーザーがいいね！したか（いいね！した場合、値が入る）
       L.id AS like_id,
       -- いいね！数
-      -- サブクエリ：外側に紐づく値がある、サブクエリ＝相関サブクエリ  
+      -- サブクエリ：外側に紐づく値がある、サブクエリ＝相関サブクエリ  ※T.id=tweets.id
       (SELECT COUNT(*) FROM likes WHERE status = 'active' AND tweet_id = T.id ) AS like_count
-
     FROM
       tweets AS T
       -- ユーザーテーブルをuser_idとtweets.user_idで紐付ける
@@ -90,6 +90,20 @@ function findTweets(array $user){
     WHERE
       T.status = 'active'
   SQL;
+
+  // 検索キーワードが入力されていた場合
+  if(isset($keyword)){
+    // エスケープ
+    $keyword = $mysqli -> real_escape_string($keyword);
+    // ツイート主のニックネーム・ユーザー名・本文から部分一致検索
+    $query .= ' AND CONCAT(U.nickname, U.name, T.body) LIKE "%' . $keyword . '%"'; 
+  }
+
+  // ツイート一覧の表示順序指定(新しい順に並び替える)
+  $query .= 'ORDER BY T.created_at DESC ';
+  // ↑最後に空白を開けないと連結して別の関数とみなされちゃう！注意。
+  // 表示件数を50件までに制限
+  $query .= 'LIMIT 50';
 
   // クエリ実行
   $result = $mysqli -> query($query);
