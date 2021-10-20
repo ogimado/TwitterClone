@@ -128,8 +128,8 @@ function getUserSession()
  * 画像をアップロード
  * 
  * @param array $user
- * @param array $file
- * @param string $type
+ * @param array $file ファイル名
+ * @param string $type user|tweet
  * @return string 画像のファイル名 
 */
 function uploadImage(array $user,array $file,string $type) //$type→userかtweetか。

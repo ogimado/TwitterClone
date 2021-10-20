@@ -67,7 +67,7 @@ if($mysqli->connect_errno){
 // ---------------------------------------
 // SQLクエリを作成
 // ---------------------------------------
-// 論理削除のクエリ作成(statusによって見えないようにする => )
+// 論理削除のクエリ作成(statusによって見えないようにする)
 $query = 'UPDATE likes SET status ="deleted" WHERE id = ? AND user_id = ?';
 $statement = $mysqli->prepare($query);
 

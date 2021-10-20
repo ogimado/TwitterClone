@@ -48,10 +48,11 @@ function createTweet(array $data)
  * 
  * @param array $user ログインしているユーザー情報
  * @param string $keyword 検索キーワード
+ * @param array $user_ids ユーザーID一覧
  * @return array|false
  */
 
-function findTweets(array $user, string $keyword = null){
+function findTweets(array $user, string $keyword = null, array $user_ids = null){
   $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
   if($mysqli -> connect_errno){
     echo 'Mysqlの接続に失敗しました。'. $mysqli -> connect_error ."\n";
@@ -97,6 +98,17 @@ function findTweets(array $user, string $keyword = null){
     $keyword = $mysqli -> real_escape_string($keyword);
     // ツイート主のニックネーム・ユーザー名・本文から部分一致検索
     $query .= ' AND CONCAT(U.nickname, U.name, T.body) LIKE "%' . $keyword . '%"'; 
+  }
+
+  // 第3引数に、ユーザーIDが指定されている場合
+  if(isset($user_ids)){
+    foreach($user_ids as $key => $user_id){
+      $user_ids[$key] = $mysqli -> real_escape_string($user_id);
+    }
+    $user_ids_csv = '"'. join('","',$user_ids) . '"';
+    // 出力イメージ：$user_ids_csv = '"2","1","9","3"'; 
+    // 最初と最後のみ'"'で指定。中間はjoinで","を挟む。
+    $query .= ' AND T.user_id IN (' . $user_ids_csv . ')';
   }
 
   // ツイート一覧の表示順序指定(新しい順に並び替える)
