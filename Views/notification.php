@@ -1,10 +1,3 @@
-<?php
-//設定関連ファイル（config.php）を読み込む
-include_once('../config.php');
-//便利な関数（util.php）を読み込む
-include_once('../util.php');
-?>
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -28,27 +21,20 @@ include_once('../util.php');
             <!-- 通知一覧エリア -->
             <div class="notification-list">
               <!-- $_GETSのcaseが存在するとき -->
-              <?php if(isset($_GET['case'])): ?> 
-                <p class="no-result">通知はまだありません。</p>
+              <?php if(empty($view_notifications)): ?> 
+                  <p class="no-result">通知はまだありません。</p>
               <!-- その他 -->
               <?php else: ?>
-                <div class="notification-item">
-                  <div class="user">
-                    <img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/sample-person.jpg" alt="">
+                <?php foreach($view_notifications as $view_notification): ?>
+                  <div class="notification-item">
+                    <div class="user">
+                      <img src="<?php echo buildImagePath($view_notification['user_image_name'],'user'); ?>" alt="">
+                    </div>
+                    <div class="content">
+                      <p><?php echo htmlspecialchars($view_notification['notification_message']); ?></p>
+                    </div>
                   </div>
-                  <div class="content">
-                    <p>いいね！されました。</p>
-                  </div>
-                </div>
-              <div class="notification-item">
-                <div class="user">
-                  <img src="<?php echo HOME_URL; ?>Views/img_uploaded/user/sample-person.jpg" alt="">
-                </div>
-                <div class="content">
-                  <p>フォローされました。</p>
-                </div>
-              </div>
-
+                <?php endforeach; ?>
               <?php endif; ?>
             
             </div>

@@ -42,6 +42,48 @@ function createTweet(array $data)
   return $response;
 }
 
+/**
+ * ツイート１件取得
+ * 
+ * @param int $tweet_id
+ * @return array|false 
+ */
+function findTweet(int $tweet_id){
+  $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+  if($mysqli->errno){
+    echo 'DBの接続に失敗しました。：'. $mysqli->error . "\n";
+    exit;
+  }
+
+  // エスケープ処理
+  $tweet_id = $mysqli->real_escape_string($tweet_id);
+
+  // ---------------------------------------
+  // SQLクエリを作成(登録)
+  // ---------------------------------------
+  // 新規登録のクエリを作成
+  $query = 'SELECT * FROM tweets WHERE status = "active" AND id = "' . $tweet_id . '"';
+
+  // ---------------------------------------
+  // 戻り値を作成
+  // ---------------------------------------
+  // クエリを実行し、SQLエラーでない場合
+  if($result = $mysqli->query($query)){
+    $response = $result->fetch_array(MYSQLI_ASSOC);
+  }else{
+    $response = false;
+    echo 'エラーメッセージ：' . $mysqli->error . "/n";
+  }
+
+  // ---------------------------------------
+  // 後処理
+  // ---------------------------------------
+  // DB接続を開放
+  $mysqli->close();
+
+  return $response;
+}
+
 
 /**
  * ツイート一覧を取得
