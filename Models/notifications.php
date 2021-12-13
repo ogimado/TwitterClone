@@ -62,7 +62,7 @@ function findNotifications(int $user_id){
   // DB接続
   $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
   if($mysqli->errno){
-    echo 'MySQLの接続に失敗しました。：'. $mysqli->error . "\n";
+    echo 'MySQLの接続に失敗しました。：'. $mysqli->error ."\n";
   }
 
   // エスケープ処理実行

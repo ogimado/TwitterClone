@@ -8,6 +8,8 @@ include_once '../config.php';
 include_once '../util.php';
 // ツイートデータ操作モデル（Model tweets）を読み込む
 include_once '../Models/tweets.php';
+// フォローデータ操作モデルを読み込む
+include_once '../Models/follows.php';
 
 // TODO:ログインチェック
 $user = getUserSession();
@@ -18,12 +20,17 @@ if(!$user){
   exit;
 } 
 
+// 自分がフォローしているユーザーIDを取得
+$following_user_ids = findFollowimgUserIds($user['id']);
+// 自分のツイートを表示したい➡自分のユーザーIDも追加
+$following_user_ids[] = $user['id'];
+
 // 表示用の変数
 $view_user = $user;
 
 //////// ツイート一覧：データ ////////
 // TO DO：モデルから取得
-$view_tweets = findTweets($user);
+$view_tweets = findTweets($user, null, $following_user_ids);
 
 // 画面表示
 include_once '../Views/home.php';
